@@ -14,8 +14,11 @@ const TeamCardContainer = styled.div`
     `}
 `;
 
-const TeamCard = ({ team, isMyTurn }) => {
-    return <TeamCardContainer isMyTurn={isMyTurn}>
+const TeamCard = ({ team, isMyTurn, onTeamClick }) => {
+    return <TeamCardContainer
+        isMyTurn={isMyTurn}
+        onClick={onTeamClick}
+    >
         <div>{team.name}</div>
         <div>Score: {team.score}</div>
     </TeamCardContainer>

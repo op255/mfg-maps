@@ -16,13 +16,25 @@ class Graph {
 
         json.data.split(';').forEach(edge => {
             const [from, to] = edge.split(',');
-            this.adjTable[from][to] = 1;
-            this.adjTable[to][from] = 1;
+            this.adjTable[from-1][to-1] = 1;
+            this.adjTable[to-1][from-1] = 1;
         });
     }
 
     isAdjacent(from, to) {
-        return this.adjTable[from][to] === 1;
+        return this.adjTable[from-1][to-1] === 1;
+    }
+
+    getAdjucentZones(zones) {
+        const result = [];
+        zones.forEach(zone => {
+            for (let i = 0; i < this.size; i++) {
+                if (this.isAdjacent(zone, i+1) && !zones.includes(i+1)) {
+                    result.push(i+1);
+                }
+            }
+        });
+        return result;
     }
 }
 

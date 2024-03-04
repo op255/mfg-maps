@@ -55,7 +55,17 @@ const GameStatusContainer = styled.div`
     margin-top: auto;
 `;
 
-const GameControls = ({ onTeamAdded, onGameStart, onTurnComplete, gameState, teams, currentTurn, roundNumber }) => {
+const GameControls = ({
+    onTeamAdded,
+    onTeamClick,
+    onGameStart,
+    onTurnComplete,
+    gameState,
+    teams,
+    activeTeam,
+    currentTurn,
+    roundNumber
+}) => {
     const [teamNameInput, setTeamNameInput] = React.useState('');
 
     return <ControlsContainer>
@@ -82,7 +92,12 @@ const GameControls = ({ onTeamAdded, onGameStart, onTurnComplete, gameState, tea
             </StartGameButton>
         </>}
         <TeamsList>
-            {teams.map((team, index) => <TeamCard key={team.name} team={team} isMyTurn={index === currentTurn}/>)}
+            {teams.map((team, index) => <TeamCard
+                key={team.name}
+                team={team}
+                onTeamClick={() => onTeamClick(index)}
+                isMyTurn={index === currentTurn || index === activeTeam}
+            />)}
         </TeamsList>
         {gameState !== 'prepare' && <GameStatusContainer>
             <ButtonCommon
