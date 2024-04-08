@@ -48,6 +48,12 @@ const Game = ({ map }) => {
         setTeams(newTeams);
     }, [teams]);
 
+    const setBase = React.useCallback((zoneId, teamIndex) => {
+        const newTeams = [...teams];
+        newTeams[teamIndex].base = zoneId;
+        setTeams(newTeams);
+    }, [teams]);
+
     return <GameContainer>
         <Map
             teams={teams}
@@ -57,6 +63,10 @@ const Game = ({ map }) => {
                 : []}
             onZoneClick={zoneId => {
                 if (gameState === 'prepare' && activeTeam !== null) {
+                    if (!teams[activeTeam].base) {
+                        console.log('set base', zoneId);
+                        setBase(zoneId, activeTeam);
+                    }
                     toggleZoneToTeam(zoneId, activeTeam);
                 }
             }}

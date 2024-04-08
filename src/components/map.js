@@ -32,8 +32,22 @@ const MapContainer = styled.div`
             `)}
             
             ${({ disabledZones }) => disabledZones.map(zoneId => css`
-                &[data-name="zone_${zoneId}"] path {
+                &[data-name="base_${zoneId}"] path {
                     fill: #666;
+                }
+            `)}
+        }
+        
+        g.base {
+            display: none;
+            
+            ${({ basePositions }) => basePositions.map(zoneId => css`
+                &[data-name="base_${zoneId}"] {
+                    display: block;
+                    
+                    path {
+                        fill: #000;
+                    }
                 }
             `)}
         }
@@ -47,9 +61,11 @@ const Map = ({ teams, disabledZones, onZoneClick, gameState }) => {
         });
         return acc;
     }, {});
+    const basePositions = React.useMemo(() => teams.map(team => team.base).filter(Boolean), [teams]);
 
     return <MapContainer
         zoneColors={zoneColors}
+        basePositions={basePositions}
         disabledZones={disabledZones}
         disableHover={false}
     >
