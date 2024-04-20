@@ -54,14 +54,22 @@ const MapContainer = styled.div`
     }
 `;
 
-const Map = ({ teams, disabledZones, onZoneClick, gameState }) => {
+const Map = ({ teams, disabledZones, basePositions, onZoneClick, gameState }) => {
     const zoneColors = teams.reduce((acc, team) => {
         team.zones.forEach(zone => {
             acc[zone] = team.color;
         });
         return acc;
     }, {});
-    const basePositions = React.useMemo(() => teams.map(team => team.base).filter(Boolean), [teams]);
+
+    const handleClick = React.useCallback((isRightClick) => (event) => {
+        event.preventDefault();
+        const parent = event.target.parentElement;
+        if (!parent || !parent.dataset.name || !parent.dataset.name.split('_')[1]) return;
+
+        console.log('Zone click: ', parent.dataset.name.split('_')[1], isRightClick);
+        onZoneClick(parent.dataset.name.split('_')[1], isRightClick);
+    }, [onZoneClick]);
 
     return <MapContainer
         zoneColors={zoneColors}
@@ -69,13 +77,7 @@ const Map = ({ teams, disabledZones, onZoneClick, gameState }) => {
         disabledZones={disabledZones}
         disableHover={false}
     >
-        <MapSvg onClick={(event) => {
-            const parent = event.target.parentElement;
-            if (!parent || !parent.dataset.name || !parent.dataset.name.split('_')[1]) return;
-
-            console.log('Zone click: ', parent.dataset.name.split('_')[1]);
-            onZoneClick(parent.dataset.name.split('_')[1]);
-        }}/>
+        <MapSvg onClick={handleClick(false)} onContextMenu={handleClick(true)}/>
     </MapContainer>;
 };
 

@@ -96,7 +96,7 @@ const GameControls = ({
                 key={team.name}
                 team={team}
                 onTeamClick={() => onTeamClick(index)}
-                isMyTurn={index === currentTurn || index === activeTeam}
+                isMyTurn={index === activeTeam}
             />)}
         </TeamsList>
         {gameState !== 'prepare' && <GameStatusContainer>

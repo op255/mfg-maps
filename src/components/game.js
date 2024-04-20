@@ -26,50 +26,99 @@ const availableColors = [
 
 const Game = ({ map }) => {
     const [teams, setTeams] = React.useState([]);
+    const [basePositions, setBasePositions] = React.useState([]);
     const [gameState, setGameState] = React.useState('prepare');
     const [turnsOrder, setTurnsOrder] = React.useState([]);
     const [currentTurn, setCurrentTurn] = React.useState(null);
     const [roundNumber, setRoundNumber] = React.useState(0);
     const [activeTeam, setActiveTeam] = React.useState(null);
 
+    const setBase = React.useCallback((zoneId, teamIndex) => {
+        const newBasePositions = [...basePositions, zoneId];
+        const newTeams = [...teams];
+        newTeams[teamIndex].base = zoneId;
+
+        setBasePositions(newBasePositions);
+        setTeams(newTeams)
+    }, [basePositions, teams]);
+
     const toggleZoneToTeam = React.useCallback((zoneId, teamIndex) => {
+        let shouldCleanupBase = true;
         const newTeams = [...teams];
 
         if (teams[teamIndex].zones.includes(zoneId)) {
             newTeams[teamIndex].zones = newTeams[teamIndex].zones.filter(z => z !== zoneId);
+
+            if (newTeams[teamIndex].base === zoneId) {
+                newTeams[teamIndex].base = null;
+            }
         } else {
+            // Remove the zone from the previous owner
             const prevOwner = newTeams.find(team => team.zones.includes(zoneId));
             if (prevOwner) {
                 prevOwner.zones = prevOwner.zones.filter(z => z !== zoneId);
             }
+
+            // Set the base if preparing
+            if (gameState === 'prepare' && !newTeams[activeTeam].base) {
+                console.log('set base', zoneId);
+                setBase(zoneId, activeTeam);
+                shouldCleanupBase = false;
+            }
+
             newTeams[teamIndex].zones.push(zoneId);
         }
 
-        setTeams(newTeams);
-    }, [teams]);
+        // Destroy the base
+        if (shouldCleanupBase) {
+            setBasePositions(basePositions.filter(z => z !== zoneId));
+        }
 
-    const setBase = React.useCallback((zoneId, teamIndex) => {
-        const newTeams = [...teams];
-        newTeams[teamIndex].base = zoneId;
         setTeams(newTeams);
-    }, [teams]);
+    }, [activeTeam, basePositions, gameState, setBase, teams]);
+
+    const onTurnComplete = React.useCallback(() => {
+        if (currentTurn === teams.length - 1) {
+            setRoundNumber(roundNumber + 1);
+            setTurnsOrder(shuffleTurnsOrder([...turnsOrder]));
+        }
+
+        setCurrentTurn((currentTurn + 1) % teams.length);
+        setActiveTeam(turnsOrder[currentTurn]);
+    }, [currentTurn, roundNumber, teams.length, turnsOrder]);
+
+    const onZoneClick = React.useCallback((zoneId, isRightClick) => {
+        if (gameState === 'prepare' && activeTeam !== null) {
+            toggleZoneToTeam(zoneId, activeTeam);
+        }
+        if (gameState === 'started') {
+            const zoneOwner = teams.find(team => team.zones.includes(zoneId));
+            const zoneOwnerId = teams.findIndex(team => team.zones.includes(zoneId));
+            const newTeams = [...teams];
+
+            if (isRightClick) {
+                if (!zoneOwner || zoneOwnerId === activeTeam) return;
+                newTeams[zoneOwnerId].score += 100;
+            }
+            if (!isRightClick && zoneOwnerId !== activeTeam) {
+                newTeams[activeTeam].score += 100;
+                toggleZoneToTeam(zoneId, activeTeam);
+            }
+
+            setTeams(newTeams);
+            onTurnComplete();
+        }
+    }, [activeTeam, gameState, onTurnComplete, teams, toggleZoneToTeam]);
 
     return <GameContainer>
         <Map
             teams={teams}
+            basePositions={basePositions}
             gameState={gameState}
             disabledZones={gameState === 'prepare' && activeTeam !== null
                 ? map.getAdjucentZones(teams.filter((_, index) => index !== activeTeam).flatMap(team => team.zones))
                 : []}
-            onZoneClick={zoneId => {
-                if (gameState === 'prepare' && activeTeam !== null) {
-                    if (!teams[activeTeam].base) {
-                        console.log('set base', zoneId);
-                        setBase(zoneId, activeTeam);
-                    }
-                    toggleZoneToTeam(zoneId, activeTeam);
-                }
-            }}
+            onZoneClick={onZoneClick}
         />
         <GameControls
             teams={teams}
@@ -93,14 +142,7 @@ const Game = ({ map }) => {
                 setRoundNumber(1);
                 setTurnsOrder(teams.map((tmp, index) => index));
             }}
-            onTurnComplete={() => {
-                if (currentTurn === teams.length - 1) {
-                    setRoundNumber(roundNumber + 1);
-                    setTurnsOrder(shuffleTurnsOrder([...turnsOrder]));
-                }
-
-                setCurrentTurn((currentTurn + 1) % teams.length);
-            }}
+            onTurnComplete={onTurnComplete}
             gameState={gameState}
             currentTurn={turnsOrder[currentTurn]}
             roundNumber={roundNumber}
