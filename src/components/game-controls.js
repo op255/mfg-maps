@@ -16,7 +16,7 @@ const ControlsContainer = styled.div`
     flex-direction: column;
     gap: 10px;
     border-radius: 10px;
-    width: 20%;
+    width: 350px;
     height: 100%;
 `;
 
@@ -111,9 +111,8 @@ const GameControls = ({
             >
                 TMP NEXT TURN
             </ButtonCommon>
-            <Title>Выбор начальной территории</Title>
             <Title>Раунд: {roundNumber}</Title>
-            <Title>Ход команды: {teams[0].name}</Title>
+            <Title>Ход команды: {teams[activeTeam].name}</Title>
         </GameStatusContainer>}
     </ControlsContainer>
 };
