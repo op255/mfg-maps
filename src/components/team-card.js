@@ -1,7 +1,10 @@
 import * as React from "react";
 import styled, {css} from "styled-components";
+import Avatar from 'boring-avatars';
 
 const TeamCardContainer = styled.div`
+    display: flex;
+    gap: 10px;
     position: relative;
     background-color: ${({ teamColor }) => teamColor};
     border-radius: 10px;
@@ -31,11 +34,24 @@ const TeamCardContentContainer = styled.div`
     border: 1px solid #c5c5c5;
 `;
 
+const AvatarContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+
 const TeamCard = ({ team, isMyTurn, onTeamClick }) => {
     return <TeamCardContainer
         onClick={onTeamClick}
         teamColor={team.color}
     >
+        <AvatarContainer>
+            <Avatar
+                size={75}
+                name={team.name}
+                variant="beam"
+            />
+        </AvatarContainer>
         <TeamCardContentContainer>
             <div>{team.name}</div>
             <div>Очки: {team.score}</div>
