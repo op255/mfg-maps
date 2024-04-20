@@ -100,17 +100,27 @@ const Game = ({ map }) => {
 
             if (isRightClick) {
                 if (!zoneOwner || zoneOwnerId === activeTeam) return;
-                newTeams[zoneOwnerId].score += 100;
+
+                if (zoneOwner && zoneOwner.base === zoneId && basePositions.includes(zoneId)) {
+                    newTeams[zoneOwnerId].score += 200;
+                } else {
+                    newTeams[zoneOwnerId].score += 100;
+                }
             }
             if (!isRightClick && zoneOwnerId !== activeTeam) {
-                newTeams[activeTeam].score += 100;
+                if (zoneOwner && zoneOwner.base === zoneId && basePositions.includes(zoneId)) {
+                    newTeams[activeTeam].score += 400;
+                } else {
+                    newTeams[activeTeam].score += 100;
+                }
+
                 toggleZoneToTeam(zoneId, activeTeam);
             }
 
             setTeams(newTeams);
             onTurnComplete();
         }
-    }, [activeTeam, gameState, onTurnComplete, teams, toggleZoneToTeam]);
+    }, [activeTeam, basePositions, gameState, onTurnComplete, teams, toggleZoneToTeam]);
 
     return <GameContainer>
         <Map
