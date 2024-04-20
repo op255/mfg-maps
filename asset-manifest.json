@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/static/css/main.6063c591.css",
-    "main.js": "/static/js/main.7fa4cc8d.js",
-    "static/media/Map.svg": "/static/media/Map.6cd58b4655439668ba72690817e01306.svg",
-    "static/media/fest-logo.png": "/static/media/fest-logo.05bbfa168b7d380f5d0c.png",
-    "index.html": "/index.html",
-    "main.6063c591.css.map": "/static/css/main.6063c591.css.map",
-    "main.7fa4cc8d.js.map": "/static/js/main.7fa4cc8d.js.map"
+    "main.css": "/mfg-maps/static/css/main.6063c591.css",
+    "main.js": "/mfg-maps/static/js/main.63efda4e.js",
+    "static/media/Map.svg": "/mfg-maps/static/media/Map.6cd58b4655439668ba72690817e01306.svg",
+    "static/media/fest-logo.png": "/mfg-maps/static/media/fest-logo.05bbfa168b7d380f5d0c.png",
+    "index.html": "/mfg-maps/index.html",
+    "main.6063c591.css.map": "/mfg-maps/static/css/main.6063c591.css.map",
+    "main.63efda4e.js.map": "/mfg-maps/static/js/main.63efda4e.js.map"
   },
   "entrypoints": [
     "static/css/main.6063c591.css",
-    "static/js/main.7fa4cc8d.js"
+    "static/js/main.63efda4e.js"
   ]
 }
