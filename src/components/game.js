@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import GameControls from "./game-controls";
 import Map from "./map";
+import {shuffleArray} from "../logic/utils";
 
 const GameContainer = styled.div`
     display: flex;
@@ -14,15 +15,16 @@ const GameContainer = styled.div`
 
 const shuffleTurnsOrder = arr => arr.concat(arr.splice(0, 1));
 
-const availableColors = [
+const availableColors = shuffleArray([
+    '#074173',
     '#7975b9',
-    '#5af5f4',
-    '#d95af5',
-    '#ffef55',
-    '#9bef55',
-    '#ffe5e5',
+    '#F7DCB9',
+    '#FB9AD1',
+    '#FFC470',
+    '#C5FF95',
+    '#4793AF',
     '#ff7171'
-];
+]);
 
 const Game = ({ map }) => {
     const [teams, setTeams] = React.useState([]);

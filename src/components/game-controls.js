@@ -41,6 +41,11 @@ const AddTeamInput = styled.input`
 const AddTeamButton = styled(ButtonCommon)`
     width: 40px;
     font-size: 24px;
+    
+    ${({ isDisabled }) => isDisabled && css`
+        pointer-events: none;
+        background-color: #7c7c7c;
+    `}
 `;
 
 const StartGameButton = styled(ButtonCommon)``;
@@ -83,6 +88,7 @@ const GameControls = ({
                         onTeamAdded(teamNameInput);
                         setTeamNameInput('');
                     }}
+                    isDisabled={teams.length > 7}
                 >
                     +
                 </AddTeamButton>
