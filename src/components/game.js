@@ -80,14 +80,26 @@ const Game = ({ map }) => {
     }, [activeTeam, basePositions, gameState, setBase, teams]);
 
     const onTurnComplete = React.useCallback(() => {
-        if (currentTurn === teams.length - 1) {
-            setRoundNumber(roundNumber + 1);
-            setTurnsOrder(shuffleTurnsOrder([...turnsOrder]));
+        const nextTeam = turnsOrder.slice(currentTurn + 1).find(teamIndex => teams[teamIndex].zones.length > 0);
+
+        if (typeof nextTeam !== 'undefined') {
+            setCurrentTurn(currentTurn + 1);
+            setActiveTeam(nextTeam);
+            return;
         }
 
-        setCurrentTurn((currentTurn + 1) % teams.length);
-        setActiveTeam(turnsOrder[currentTurn]);
-    }, [currentTurn, roundNumber, teams.length, turnsOrder]);
+        setRoundNumber(roundNumber + 1);
+        setCurrentTurn(0);
+
+        const newTurnsOrder = shuffleTurnsOrder([
+            ...turnsOrder
+                .map(teamIndex => teams[teamIndex].zones.length > 0 ? teamIndex : undefined)
+                .filter(i => typeof i !== 'undefined'),
+        ]);
+
+        setTurnsOrder(newTurnsOrder);
+        setActiveTeam(newTurnsOrder[0]);
+    }, [currentTurn, roundNumber, teams, turnsOrder]);
 
     const onZoneClick = React.useCallback((zoneId, isRightClick) => {
         if (gameState === 'prepare' && activeTeam !== null) {
@@ -153,6 +165,7 @@ const Game = ({ map }) => {
                 setCurrentTurn(0);
                 setRoundNumber(1);
                 setTurnsOrder(teams.map((tmp, index) => index));
+                setActiveTeam(0);
             }}
             onTurnComplete={onTurnComplete}
             gameState={gameState}
