@@ -12,6 +12,8 @@ const PageContainer = styled.div`
 `;
 
 const TopBar = styled.div`
+    position: absolute;
+    top: 10px;
     height: 70px;
     padding: 5px 40px;
 `;
