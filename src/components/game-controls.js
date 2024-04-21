@@ -36,6 +36,7 @@ const AddTeamInput = styled.input`
     width: 80%;
     border: unset;
     outline: unset;
+    padding-left: 10px;
 `;
 
 const AddTeamButton = styled(ButtonCommon)`
@@ -48,7 +49,12 @@ const AddTeamButton = styled(ButtonCommon)`
     `}
 `;
 
-const StartGameButton = styled(ButtonCommon)``;
+const StartGameButton = styled(ButtonCommon)`
+    ${({ isDisabled }) => isDisabled && css`
+        pointer-events: none;
+        background-color: #7c7c7c;
+    `}
+`;
 
 const TeamsList = styled.div`
     display: flex;
@@ -88,12 +94,15 @@ const GameControls = ({
                         onTeamAdded(teamNameInput);
                         setTeamNameInput('');
                     }}
-                    isDisabled={teams.length > 6}
+                    isDisabled={teams.length > 6 || !teamNameInput}
                 >
                     +
                 </AddTeamButton>
             </AddTeamContainer>
-            <StartGameButton onClick={onGameStart}>
+            <StartGameButton
+                onClick={onGameStart}
+                isDisabled={teams.length < 2}
+            >
                 Начать игру
             </StartGameButton>
         </>}
@@ -103,6 +112,7 @@ const GameControls = ({
                 team={team}
                 onTeamClick={() => onTeamClick(index)}
                 isMyTurn={index === activeTeam}
+                gameState={gameState}
             />)}
         </TeamsList>
         {gameState !== 'prepare' && <GameStatusContainer>
