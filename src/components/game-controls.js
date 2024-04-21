@@ -88,7 +88,7 @@ const GameControls = ({
                         onTeamAdded(teamNameInput);
                         setTeamNameInput('');
                     }}
-                    isDisabled={teams.length > 7}
+                    isDisabled={teams.length > 6}
                 >
                     +
                 </AddTeamButton>

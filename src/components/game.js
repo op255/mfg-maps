@@ -10,15 +10,14 @@ const GameContainer = styled.div`
     padding: 10px;
     
     // height fix
-    height: calc(100% - 100px);
+    height: calc(100% - 20px);
 `;
 
 const shuffleTurnsOrder = arr => arr.concat(arr.splice(0, 1));
 
 const availableColors = shuffleArray([
-    '#074173',
     '#7975b9',
-    '#F7DCB9',
+    '#007F73',
     '#FB9AD1',
     '#FFC470',
     '#C5FF95',
