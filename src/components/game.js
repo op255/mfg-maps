@@ -121,11 +121,14 @@ const Game = ({ map }) => {
             if (!isRightClick && zoneOwnerId !== activeTeam) {
                 if (zoneOwner && zoneOwner.base === zoneId && basePositions.includes(zoneId)) {
                     newTeams[activeTeam].score += 400;
+
+                    newTeams[zoneOwnerId].zones.forEach(zone => toggleZoneToTeam(zone, activeTeam));
+                    newTeams[zoneOwnerId].base = null;
+                    setBasePositions(basePositions.filter(z => z !== zoneId));
                 } else {
                     newTeams[activeTeam].score += 100;
+                    toggleZoneToTeam(zoneId, activeTeam);
                 }
-
-                toggleZoneToTeam(zoneId, activeTeam);
             }
 
             setTeams(newTeams);
