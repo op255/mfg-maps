@@ -26,11 +26,14 @@ const ActiveMarker = styled.div`
 `;
 
 const TeamCardContentContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     background-color: white;
     border-radius: 10px;
     padding: 5px;
     height: 68px;
-    width: 50%;
+    width: 60%;
     border: 1px solid #c5c5c5;
 `;
 
@@ -40,7 +43,20 @@ const AvatarContainer = styled.div`
     align-items: center;
 `;
 
-const TeamCard = ({ team, isMyTurn, onTeamClick }) => {
+const TeamName = styled.div`
+    font-size: 22px;
+    font-weight: 700;
+`;
+
+const DeadBadge = styled.div`
+    writing-mode: vertical-lr;
+    text-transform: uppercase;
+    text-align: center;
+    font-weight: 900;
+    margin-left: auto;
+`;
+
+const TeamCard = ({ team, isMyTurn, onTeamClick, gameState }) => {
     return <TeamCardContainer
         onClick={onTeamClick}
         teamColor={team.color}
@@ -53,9 +69,10 @@ const TeamCard = ({ team, isMyTurn, onTeamClick }) => {
             />
         </AvatarContainer>
         <TeamCardContentContainer>
-            <div>{team.name}</div>
+            <TeamName>{team.name}</TeamName>
             <div>Очки: {team.score}</div>
         </TeamCardContentContainer>
+        {gameState !== 'prepare' && team.zones.length === 0 && <DeadBadge>Выбыл</DeadBadge>}
         {isMyTurn && <ActiveMarker />}
     </TeamCardContainer>
 };
